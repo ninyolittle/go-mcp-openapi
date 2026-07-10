@@ -61,7 +61,6 @@ func (o *mcpGoTools) buildHandler(
 // preprocessToolOpts processes the parameters of an OpenAPI operation and
 // generates corresponding MCP tool options based on their types and properties.
 func (o *mcpGoTools) preprocessToolOpts(
-	doc *openapi2.T,
 	toolOpts *[]mcp.ToolOption, operation *openapi2.Operation) {
 	for _, param := range operation.Parameters {
 		propOpts := []mcp.PropertyOption{
@@ -84,7 +83,7 @@ func (o *mcpGoTools) preprocessToolOpts(
 		case param.Type.Is("array"):
 			*toolOpts = append(*toolOpts, mcp.WithArray(param.Name, propOpts...))
 		default:
-			propOpts = append(propOpts, mcp.Properties(schemaToJsonSchema(doc, getSchemaFromRef(doc, param.Schema.Ref))["properties"].(map[string]any)))
+			propOpts = append(propOpts, mcp.Properties(schemaToJsonSchema(o.doc, getSchemaFromRef(o.doc, param.Schema.Ref))["properties"].(map[string]any)))
 			*toolOpts = append(*toolOpts, mcp.WithObject(param.Name, propOpts...))
 		}
 	}
@@ -110,7 +109,7 @@ func (o *mcpGoTools) buildTools() ([]server.ServerTool, error) {
 				mcp.WithDestructiveHintAnnotation(destructive),
 			}
 
-			o.preprocessToolOpts(o.doc, &toolOpts, operation)
+			o.preprocessToolOpts(&toolOpts, operation)
 
 			toolName := operation.OperationID
 			if toolName == "" {
