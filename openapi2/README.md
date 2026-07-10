@@ -10,7 +10,7 @@ import (
 )
 
 func main () {
-    spec, err := omcpgo.NewOpenApiSpec()
+    spec, err := omcpgo.New()
 }
 ```
 
@@ -23,7 +23,7 @@ This option specifies how to load the OpenAPI specification. You must provide ei
 #### Load from file
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
 )
 ```
@@ -31,7 +31,7 @@ spec, err := omcpgo.NewOpenApiSpec(
 #### Load from URL
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromURL("https://example.com/openapi.json"),
 )
 ```
@@ -63,7 +63,7 @@ Suppose you have the following operations in your OpenAPI specification:
 In go, you can filter the OpenAPI specification to include only the `getUser` and `createUser` operations by using the `FilterByOperationID` option:
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
     omcpgo.FilterByOperationID([]string{"getUser", "createUser"}),
 )
@@ -76,7 +76,7 @@ This filter allows you to specify which operations should be included in the Ope
 NOTE: The HTTP method filter is case-insensitive, so you can use either uppercase or lowercase letters.
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
     omcpgo.FilterByHTTPMethod([]string{"GET", "POST"}),
 )
@@ -87,7 +87,7 @@ spec, err := omcpgo.NewOpenApiSpec(
 This filter allows you to specify which operations should be included in the OpenAPI specification based on their path. For example, if you want to include only the operations with the `/user` and `/admin` paths, you can use the `FilterByPaths` option:
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
     omcpgo.FilterByPaths([]string{"/user", "/admin"}),
 )
@@ -121,7 +121,7 @@ Example:
 ```
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
     omcpgo.FilterByTags([]string{"user", "admin"}),
 )
@@ -136,7 +136,7 @@ Modifiers are used to modify the OpenAPI specification after it has been loaded.
 This modifier allows you to specify the host for the OpenAPI specification. This is useful as this value will be used as host in the URL when calling the API. For example, if you want to set the host to `api.example.com`, you can use the `WithHost` option:
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
     omcpgo.WithHost("api.example.com"),
 )
@@ -147,7 +147,7 @@ spec, err := omcpgo.NewOpenApiSpec(
 This modifier lets you specify a custom URL builder for the OpenAPI specification. The custom URL builder is used to construct request URLs when calling the API, replacing the default URL generation logic. This is useful when the default behavior does not match your API’s URL structure or when additional customization is required. To use a custom URL builder, pass the `WithURLBuilder` option:
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
     omcpgo.WithURLBuilder(func(op *openapi3.Operation, method, scheme, host, basePath string, path string, query string) string {
         // Custom URL building logic here
@@ -165,7 +165,7 @@ spec, err := omcpgo.NewOpenApiSpec(
 This modifier allows you to specify custom headers for the OpenAPI specification. This is useful when you want to add additional information to the documentation, such as authentication tokens or other metadata. These values are used every time a request is made. To use custom headers, pass the `WithHeaders` option:
 
 ```go
-spec, err := omcpgo.NewOpenApiSpec(
+spec, err := omcpgo.New(
     omcpgo.LoadFromFile("openapi.json"),
     omcpgo.WithHeaders(func (ctx context.Context) map[string]string {
         // Custom header logic here
